@@ -3,53 +3,54 @@ from pathlib import Path
 import os
 import sys
 
-print('Sólo funciona con archivos .wav\n')
+
+print('\nOnly works with .wav files!\n')
 if len(sys.argv) > 1:
     if not Path(sys.argv[1]).exists():
-        print('No existe el directorio')
+        print('Path not found')
         exit()
     else:
-        ruta = Path(sys.argv[1])
+        path = Path(sys.argv[1])
 else:
-    ruta = Path(os.getcwd(), 'audios')
+    path = Path(os.getcwd(), 'audios')
 
-print(f'Prosigo con ruta {ruta}')
+print(f'Will continue with {path} path\n')
 
-if not ruta.exists():
-    print('No existe directorio audios')
+if not path.exists():
+    print('"audios" path not found')
     exit()
-if not Path(ruta, 'procesados').exists():
-    os.mkdir(Path(ruta, 'procesados'))
+if not Path(path, 'processed').exists():
+    os.mkdir(Path(path, 'processed'))
 
-ls = os.listdir(ruta)
-lista = []
-[lista.append(el) for el in ls if '.wav' in str(el)]
-print('Archivos .wav encontrados: ' + str(len(lista)))
+ls = os.listdir(path)
+list_ = []
+[list_.append(el) for el in ls if '.wav' in str(el)]
+print('.wav files found: ' + str(len(list_)))
 print()
 
 r = sr.Recognizer()
-for archivo in ruta.glob('*.wav'):
-    print('Archivo:', archivo.name)
+for file in path.glob('*.wav'):
+    print('File:', file.name)
     try:
-        with sr.AudioFile(str(archivo)) as source:
+        with sr.AudioFile(str(file)) as source:
             audio_data = r.listen(source)
     except:
-        print('NO SE PUDO ABRIR EL ARCHIVO!!!\n')
+        print("CAN'T OPEN THE FILE!!!\n")
         continue
-    # recognize speech using Google Speech Recognition - Sólo para testear, sino, poner la API KEY de google;
-    # pasos para conseguirla: https://www.chromium.org/developers/how-tos/api-keys/
+    # recognize speech using Google Speech Recognition - Just for testing, instead, use Google API KEY;
+    # you can get it on https://www.chromium.org/developers/how-tos/api-keys/
     try:
-        text = r.recognize_google(audio_data, language='es-AR', show_all=True)
-        texto = 'Texto: ' + text['alternative'][0]['transcript'] + '\n'
-        texto = texto + 'Aproximación: ' + str(round(float(text['alternative'][0]['confidence']) * 100, 2)) + '%'
-        with open(Path(ruta, 'procesados', archivo.stem + '.txt'), 'w') as f:
+        g_text = r.recognize_google(audio_data, language='es-AR', show_all=True)
+        texto = 'Text: ' + g_text['alternative'][0]['transcript'] + '\n'
+        texto = texto + 'Approximation: ' + str(round(float(g_text['alternative'][0]['confidence']) * 100, 2)) + '%'
+        with open(Path(path, 'processed', file.stem + '.txt'), 'w') as f:
             f.write(texto)
-        os.rename(archivo, Path(ruta, 'procesados', archivo.name))
+        os.rename(file, Path(path, 'processed', file.name))
         print(texto)
         print('*' * 50)
     except sr.UnknownValueError:
-        print("No se entendió el audio")
+        print("Don't understand speech")
     except sr.RequestError as e:
-        print("Error de comunicación con el servicio Reconocimiento de Voz de Google; {0}".format(e))
+        print("Communication error with Google Voice Recognition Service; {0}".format(e))
     except:
-        print('Error genérico')
+        print('Generic error')
