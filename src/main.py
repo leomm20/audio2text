@@ -18,6 +18,8 @@ print(f'Will continue with {path} path\n')
 
 if not path.exists():
     print('"audios" path not found')
+    os.mkdir('audios')
+    print('directory "audios" created, put your audio files in there')
     exit()
 if not Path(path, 'processed').exists():
     os.mkdir(Path(path, 'processed'))
