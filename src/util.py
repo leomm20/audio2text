@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -19,5 +20,15 @@ if not path.exists():
     print(f'Path {path} not found')
     exit()
 
+counter = 0
 for file in path.glob('*.*'):
     audio_to_wav(file)
+    counter += 1
+print(f'\nProcessed {counter} files\n')
+
+if counter > 0:
+    r = input('Move files to audios for extract text? (y/n): ')
+    if r in ['y', 'Y']:
+        for file in Path(path, 'processed').glob('*.*'):
+            shutil.move(file, '.\\audios')
+        print('Ready!\n')

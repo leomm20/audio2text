@@ -16,6 +16,11 @@ else:
 
 print(f'Will continue with {path} path\n')
 
+language = 'es-AR'
+if len(sys.argv) > 2:
+    if sys.argv[2].lower() == 'en-us':
+        language = 'en-US'
+
 if not path.exists():
     print('"audios" path not found')
     os.mkdir('audios')
@@ -39,10 +44,10 @@ for file in path.glob('*.wav'):
     except:
         print("CAN'T OPEN THE FILE!!!\n")
         continue
-    # recognize speech using Google Speech Recognition - Just for testing, instead, use Google API KEY;
+    # recognize speech using Google Speech Recognition - Just for testing! For production use Google API KEY;
     # you can get it on https://www.chromium.org/developers/how-tos/api-keys/
     try:
-        g_text = r.recognize_google(audio_data, language='es-AR', show_all=True)
+        g_text = r.recognize_google(audio_data, language=language, show_all=True)
         texto = 'Text: ' + g_text['alternative'][0]['transcript'] + '\n'
         texto = texto + 'Approximation: ' + str(round(float(g_text['alternative'][0]['confidence']) * 100, 2)) + '%'
         with open(Path(path, 'processed', file.stem + '.txt'), 'w') as f:
@@ -51,8 +56,8 @@ for file in path.glob('*.wav'):
         print(texto)
         print('*' * 50)
     except sr.UnknownValueError:
-        print("Don't understand speech")
+        print("\nGoogle doesn't understand speech")
     except sr.RequestError as e:
-        print("Communication error with Google Voice Recognition Service; {0}".format(e))
+        print("\nCommunication error with Google Voice Recognition Service; {0}".format(e))
     except:
-        print('Generic error')
+        print('\nGeneric error')
