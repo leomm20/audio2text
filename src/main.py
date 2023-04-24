@@ -58,6 +58,6 @@ for file in path.glob('*.wav'):
     except sr.UnknownValueError:
         print("\nGoogle doesn't understand speech")
     except sr.RequestError as e:
-        print("\nCommunication error with Google Voice Recognition Service; {0}".format(e))
-    except:
-        print('\nGeneric error')
+        print("\nCommunication error. Google Voice Recognition Service doesn't respond; {0}".format(e))
+    except Exception as e:
+        print('\nGeneric error', e)
