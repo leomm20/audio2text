@@ -15,3 +15,7 @@ execute 'ffmpeg -formats' in terminal
 5.In terminal: cd [path_to_audio2text]\src
 6.Execute python main.py [optional: [path_to_audio2text]]
 (you can put your audio files in src\audios and just execute python.main.py)
+
+----------------------------&
+
+[![Invitame un café en cafecito.app](https://cdn.cafecito.app/imgs/buttons/button_2.svg)](https://cafecito.app/leomm20)
